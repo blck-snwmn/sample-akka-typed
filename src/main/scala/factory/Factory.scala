@@ -2,7 +2,6 @@ package factory
 
 import akka.actor.typed.{ActorSystem, Behavior}
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
-import factory.Factory._
 
 
 object Factory {
@@ -15,7 +14,10 @@ object Factory {
 
 }
 
-class Factory(context: ActorContext[FactoryCommand]) extends AbstractBehavior[FactoryCommand] {
+class Factory(context: ActorContext[Factory.FactoryCommand]) extends AbstractBehavior[Factory.FactoryCommand] {
+
+  import factory.Factory._
+
   context.log.info("Factory actor started")
   override def onMessage(msg: FactoryCommand): Behavior[FactoryCommand] =
     msg match {
@@ -26,6 +28,9 @@ class Factory(context: ActorContext[FactoryCommand]) extends AbstractBehavior[Fa
 }
 
 object FactoryRoot extends App {
+
+  import factory.Factory._
+
   val system = ActorSystem(Factory(), "factory")
   system ! Request()
 }
