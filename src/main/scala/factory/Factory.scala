@@ -16,10 +16,11 @@ object Factory {
 }
 
 class Factory(context: ActorContext[FactoryCommand]) extends AbstractBehavior[FactoryCommand] {
+  context.log.info("Factory actor started")
   override def onMessage(msg: FactoryCommand): Behavior[FactoryCommand] =
     msg match {
       case Request() =>
-        println("created")
+        context.log.info("Factory actor received Request message")
         this
     }
 }
