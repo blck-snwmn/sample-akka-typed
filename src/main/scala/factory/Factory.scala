@@ -10,6 +10,7 @@ object Factory {
 
   sealed trait FactoryCommand
   final case class Request() extends FactoryCommand
+  //at this version, because removed `sender()`, include ActorRef in parameter.
   final case class GetNumOfCreatedItems(replyTo: ActorRef[Int]) extends FactoryCommand
 }
 
@@ -25,7 +26,7 @@ class Factory(context: ActorContext[Factory.FactoryCommand]) extends AbstractBeh
     msg match {
       case Request() =>
         context.log.info("Factory actor received Request message")
-        numOfCreatedItems += 1
+        numOfCreatedItems += 1 //created!!
         this
 
       case GetNumOfCreatedItems(replyTo) =>
