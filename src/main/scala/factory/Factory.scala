@@ -20,9 +20,9 @@ class Factory(context: ActorContext[Factory.FactoryCommand]) extends AbstractBeh
   import factory.Factory._
 
   context.log.info("Factory actor started")
-  val numOfNeedToCreate = 10
-  var numOfMaterial = 0
-  var numOfCreatedItems = 0
+  private val numOfNeedToCreate = 10
+  private var numOfMaterial = 0
+  private var numOfCreatedItems = 0
 
   override def onMessage(msg: FactoryCommand): Behavior[FactoryCommand] =
     msg match {
