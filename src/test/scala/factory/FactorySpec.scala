@@ -26,14 +26,14 @@ class FactorySpec extends ScalaTestWithActorTestKit with WordSpecLike {
       prob.expectMessage(0)
     }
 
-    "num of created items equals 1 when there are material to need" in {
+    "num of created items equals 3 when there are material to need" in {
       val prob = createTestProbe[Int]
       val actor = spawn(Factory(), "test3")
 
-      actor ! AddMaterial(10)
+      actor ! AddMaterial(31)
       Thread.sleep(100)
       actor ! GetNumOfCreatedItems(prob.ref)
-      prob.expectMessage(1)
+      prob.expectMessage(3)
     }
   }
 
