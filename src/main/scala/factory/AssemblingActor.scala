@@ -6,9 +6,9 @@ import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 
 import scala.concurrent.duration._
 
-object Factory {
+object AssemblingActor {
   def apply(): Behavior[FactoryCommand] =
-    Behaviors.setup(context => new Factory(context))
+    Behaviors.setup(context => new AssemblingActor(context))
 
   sealed trait FactoryCommand
   final case class Request() extends FactoryCommand
@@ -18,9 +18,9 @@ object Factory {
   private final case class Created(num: Int) extends FactoryCommand
 }
 
-class Factory(context: ActorContext[Factory.FactoryCommand]) extends AbstractBehavior[Factory.FactoryCommand] {
+class AssemblingActor(context: ActorContext[AssemblingActor.FactoryCommand]) extends AbstractBehavior[AssemblingActor.FactoryCommand] {
 
-  import factory.Factory._
+  import factory.AssemblingActor._
 
   context.log.info("Factory actor started")
   private val numOfNeedToCreate = 10
@@ -68,8 +68,8 @@ class Factory(context: ActorContext[Factory.FactoryCommand]) extends AbstractBeh
 
 object FactoryRoot extends App {
 
-  import factory.Factory._
+  import factory.AssemblingActor._
 
-  val system = ActorSystem(Factory(), "factory")
+  val system = ActorSystem(AssemblingActor(), "factory")
   system ! Request()
 }
