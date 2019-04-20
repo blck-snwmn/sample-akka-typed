@@ -23,13 +23,12 @@ class AssemblingActor(context: ActorContext[AssemblingActor.FactoryCommand]) ext
   import factory.AssemblingActor._
 
   context.log.info("Factory actor started")
-  private val numOfNeedToCreate = 10
   private var numOfMaterial = 0
   private var numOfCreatedItems = 0
   private var worker: Option[Cancellable] = None
-
+  private val recipe = new Recipe(1 millisecond, 10, 1)
   private def canCreate = worker == None
-  private def isEnoughMaterial = numOfMaterial >= numOfNeedToCreate
+  private def isEnoughMaterial = numOfMaterial >= recipe.materialNum
 
   override def onMessage(msg: FactoryCommand): Behavior[FactoryCommand] =
     msg match {
@@ -37,11 +36,11 @@ class AssemblingActor(context: ActorContext[AssemblingActor.FactoryCommand]) ext
         context.log.info("Factory actor received Request message")
         //if there is material to need, and no create
         if (isEnoughMaterial && canCreate) {
-          numOfMaterial -= numOfNeedToCreate // resume material
+          numOfMaterial -= recipe.materialNum // resume material
           //take time to create
           worker = Some(
             //after 10 seconds, create 1 item
-            context.scheduleOnce(1 milliseconds, context.self, Created(1))
+            context.scheduleOnce(recipe.productionTime, context.self, Created(recipe.productNum))
           )
         }
         this
