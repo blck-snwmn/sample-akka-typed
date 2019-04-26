@@ -27,6 +27,9 @@ class Storage(context: ActorContext[Base.BaseCommand]) extends AbstractBehavior[
           replayTo ! AddItem("", n)
       }
       this
+    case RequestWantedItem(ref) =>
+      ref ! RequestAnyItem(Quantity(10), context.self)
+      this
     case AddItem(_, num) =>
       innerStorage += num
       delayResponseActor.foreach(r => context.self ! r)

@@ -7,6 +7,15 @@ class StorageSpec extends ScalaTestWithActorTestKit with WordSpecLike {
 
   import Base._
 
+  "Storage" must {
+    "send request when it receive RequestWantedItem" in {
+      val prob = createTestProbe[BaseCommand]
+      val actor = spawn(Storage())
+      actor ! RequestWantedItem(prob.ref)
+      prob.expectMessage(RequestAnyItem(Quantity(10), actor.ref))
+    }
+  }
+
   "Storage that have sufficient item" must {
     "send requested item" in {
       val prob = createTestProbe[BaseCommand]
