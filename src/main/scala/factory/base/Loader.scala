@@ -22,7 +22,6 @@ class Loader(context: ActorContext[Base.BaseCommand],
 
   import factory.base.Base._
 
-  implicit val timeout: Timeout = 3.seconds
   override def onMessage(msg: Base.BaseCommand): Behavior[Base.BaseCommand] = msg match {
     case addItem@AddItem(_, _) =>
       destination.foreach(ref => ref ! addItem)
