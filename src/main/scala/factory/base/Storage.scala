@@ -18,13 +18,13 @@ class Storage(context: ActorContext[Base.BaseCommand]) extends AbstractBehavior[
   private var delayResponseActor: Option[RequestAnyItem] = None
 
   override def onMessage(msg: Base.BaseCommand): Behavior[Base.BaseCommand] = msg match {
-    case request@RequestAnyItem(num, replayTo) =>
+    case request@RequestAnyItem(num, replyTo) =>
       innerStorage match {
         case Quantity(0) => delayResponseActor = Some(request)
         case storage@_ =>
           val n = if (storage > num) num else storage
           innerStorage -= n
-          replayTo ! AddItem("", n)
+          replyTo ! AddItem("", n)
       }
       this
     case RequestWantedItem(ref) =>
