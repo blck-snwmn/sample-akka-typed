@@ -27,6 +27,11 @@ class Loader(context: ActorContext[Base.BaseCommand],
   override def onMessage(msg: Base.BaseCommand): Behavior[Base.BaseCommand] = msg match {
     case addItem@AddItem(_, _) =>
       destination.foreach(ref => ref ! addItem)
+      //destinationへ追加したら、sourceから再取得
+      //暫定対応：実際には具体的なアイテムを取得する
+      source.foreach(ref =>
+        context.scheduleOnce(1.second, ref, RequestAnyItem(Quantity(10), context.self))
+      )
       this
     case RequestAnyItem(num, ref) =>
       destination.fold(Behaviors.unhandled[BaseCommand]) {

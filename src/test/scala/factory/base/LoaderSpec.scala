@@ -22,5 +22,12 @@ class LoaderSpec extends ScalaTestWithActorTestKit with WordSpecLike {
       actor ! expectedMessage
       destination.expectMessage(expectedMessage)
     }
+    "send `request` to source when received `AddItem`" in {
+      val source = createTestProbe[BaseCommand]
+
+      val actor = spawn(Loader(Some(source.ref), None))
+      actor ! AddItem("", Quantity(0))
+      source.expectMessage(RequestAnyItem(Quantity(10), actor.ref))
+    }
   }
 }
