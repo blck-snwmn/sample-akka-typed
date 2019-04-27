@@ -28,11 +28,12 @@ class Loader(context: ActorContext[Base.BaseCommand],
     case addItem@AddItem(_, _) =>
       destination.foreach(ref => ref ! addItem)
       this
-    case request@RequestAnyItem(_, ref) =>
+    case RequestAnyItem(num, ref) =>
       destination.fold(Behaviors.unhandled[BaseCommand]) {
         _ match {
           case `ref` =>
-            source.foreach(ref => ref ! request)
+            //常にdestinationからの依頼を許可し、自分を返信先に書きえsourceへ依頼
+            source.foreach(ref => ref ! RequestAnyItem(num, context.self))
             this
           case _ =>
             Behaviors.unhandled
